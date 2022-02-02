@@ -1,37 +1,41 @@
-import { createNewGame } from "./utils.js";
+import { createNewGameAndMessage } from "./utils.js";
 import { User } from "../model/User.js";
 
 export class GameController {
   static async startGame(req, res) {
     const { _id, bet } = req.body;
 
-    let user; //проверяем есть ли юзер и закончил ли он игру
+    let user; //проверяем есть ли юзер 
     try {
       user = await User.findOne({ _id: _id });
     } catch (err) {
-      console.log("error", err);
       return res
         .status(400)
         .json({ e: err, message: "So, and who wanna play?!" });
     }
-    console.log("User", user);
 
-    if (user.currentGame) {
+
+    if (user.currentGame) { //проверям чтобы у юзера не было незаконченных игр
       return res.send({ message: "You must finish your current game!" });
     }
 
-    const game = await createNewGame(_id, bet);
+    const response = await createNewGameAndMessage(_id, bet);
 
-    console.log("Game: ", game);
+    if(response.game.status === "results" && response.game.dealerScore !== 21) { //случай моментально победы игрока
+      await User.updateOne(
+        { _id: _id },
+        { ballance: user.ballance + bet }
+      ); //начисляем ставку за быструю победу с блэк джеком
+    }
+    if(response.game.status === "user_move"){
+      await User.updateOne(
+        { _id: _id },
+        { ballance: user.ballance - bet, currentGame: response.game._id }
+      ); //снимаем ставку и ставим текущую игру
+    }
 
-    console.log("ID: ", game._id);
 
-    await User.updateOne(
-      { _id: _id },
-      { ballance: user.ballance - bet, currentGame: game._id }
-    ); //снимаем ставку и ставим текущую игру
-
-    res.send({ game });
+    res.send( response );
   }
 
   static takeCard(req, res) {}

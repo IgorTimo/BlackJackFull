@@ -1,4 +1,5 @@
 import { Game } from "../model/Game.js";
+import { User } from "../model/User.js";
 
 const cards = [
   "0C",
@@ -59,6 +60,18 @@ function getNewCards() {
   return cards.sort(() => Math.random() - 0.5);
 }
 
+function getBlackJackQuickWinCards() {
+  return ["AS", "JC", "8D", "8H"];
+}
+
+function getBlackJackCards() {
+  return ["AS", "JC", "0D", "8H"];
+}
+
+function getBlackJackDrawCards() {
+  return ["AS", "JC", "0D", "AH"];
+}
+
 function calculateScore(cards) {
   return cards.reduce((acc, card) => {
     if (
@@ -80,7 +93,7 @@ function calculateScore(cards) {
   }, 0);
 }
 
-export async function createNewGame(_id, bet) {
+export async function createNewGameAndMessage(_id, bet) {
   const cards = getNewCards();
   const cardsHash = "hash";
   const restOfCards = [...cards];
@@ -89,9 +102,32 @@ export async function createNewGame(_id, bet) {
   userCards.push(restOfCards.shift());
   userCards.push(restOfCards.shift());
   dealerCards.push(restOfCards.shift());
-  const dealerScore = calculateScore(dealerCards);
+  
   const userScore = calculateScore(userCards);
-  const status = "user_move";
+
+  let status;
+  let message;
+
+  if (userScore === 21) { //проверяем наличие блэк джека
+    status = "results";
+    if (calculateScore(dealerCards) < 10) {
+      message = "You have a Black Jack. No chance for Diller!";
+    } else {
+      dealerCards.push(restOfCards.shift());
+      if (calculateScore(dealerCards) === 21) {
+        message =
+          "You have a Black Jack. But the diller have a Black Jack too! Draw.";
+      } else {
+        message =
+          "You have a Black Jack. Diller have a chance but he isn't so lucky... You win!";
+      }
+    }
+  } else {
+    status = "user_move";
+    message = "Take card or press enouhth.";
+  }
+
+  const dealerScore = calculateScore(dealerCards);
 
   const game = new Game({
     cards: cards,
@@ -108,5 +144,11 @@ export async function createNewGame(_id, bet) {
 
   await game.save();
 
-  return game;
+  return { game, message };
+}
+
+function dealerPlay(dealerCards, restOfCards) {
+  while (dcalculateScore(dealerCards) < 17) {
+    dealerCards.push(restOfCards.shift);
+  }
 }
