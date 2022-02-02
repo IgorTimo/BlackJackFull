@@ -22,55 +22,14 @@ function App() {
     
   }, [message]);
 
-  const handleStartGameClick = () => {
+  function quickPost(req, url){
     const requestOptions = {
       method: "POST",
-      body: JSON.stringify({
-        _id: userId,
-        bet: 1,
-      }),
+      body: JSON.stringify(req),
       headers: { "Content-Type": "application/json" },
     };
-
-    fetch("http://localhost:3003/start_game", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setMessage(data.message);
-        if (data.game) {
-          setGame(data.game);
-        }
-      });
-  };
-
-  const handleTakeCardClick = () => {
-    const requestOptions = {
-      method: "POST",
-      body: JSON.stringify({
-        _id: userId,
-      }),
-      headers: { "Content-Type": "application/json" },
-    };
-
-    fetch("http://localhost:3003/take_card", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setMessage(data.message);
-        if (data.game) {
-          setGame(data.game);
-        }
-      });
-  };
-
-  const handleEnougthClick = () => {
-    const requestOptions = {
-      method: "POST",
-      body: JSON.stringify({
-        _id: userId,
-      }),
-      headers: { "Content-Type": "application/json" },
-    };
-
-    fetch("http://localhost:3003/dealer_game", requestOptions)
+  
+    fetch(`http://localhost:3003/${url}`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         setMessage(data.message);
@@ -82,14 +41,14 @@ function App() {
 
   function renderSwitch() {
     if (!game.status) {
-      return <button onClick={() => handleStartGameClick()}>Start game</button>;
+      return <button onClick={() => quickPost({_id: userId, bet: 1}, "start_game")}>Start game</button>;
     }
 
     if (game.status === "user_move") {
       return (
         <>
-          <button onClick={() => handleTakeCardClick()}>Take card</button>
-          <button onClick={() => handleEnougthClick()}>Enougth</button>
+          <button onClick={() => quickPost({_id: userId}, "take_card")}>Take card</button>
+          <button onClick={() => quickPost({_id: userId}, "dealer_game")}>Enougth</button>
         </>
       );
     }
@@ -127,5 +86,7 @@ function App() {
     </>
   );
 }
+
+
 
 export default App;
