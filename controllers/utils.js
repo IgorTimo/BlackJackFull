@@ -1,3 +1,5 @@
+import { Game } from "../model/Game.js";
+
 const cards = [
   "0C",
   "0D",
@@ -53,28 +55,58 @@ const cards = [
   "QS",
 ];
 
-export function getNewCards() {
+function getNewCards() {
   return cards.sort(() => Math.random() - 0.5);
 }
 
+function calculateScore(cards) {
+  return cards.reduce((acc, card) => {
+    if (
+      card.charAt(0) === "K" ||
+      card.charAt(0) === "Q" ||
+      card.charAt(0) === "J" ||
+      card.charAt(0) === "0"
+    ) {
+      return (acc += 10);
+    }
+    if (card.charAt(0) === "A" && acc < 11) {
+      return (acc += 11);
+    }
+    if (card.charAt(0) === "A" && acc >= 11) {
+      return (acc += 1);
+    }
 
-export function calculateScore(cards) {
-    return cards.reduce((acc, card) => {
-      if (
-        card.code.charAt(0) === "K" ||
-        card.code.charAt(0) === "Q" ||
-        card.code.charAt(0) === "J" ||
-        card.code.charAt(0) === "0"
-      ) {
-        return (acc += 10);
-      }
-      if (card.code.charAt(0) === "A" && acc < 11) {
-        return (acc += 11);
-      }
-      if (card.code.charAt(0) === "A" && acc >= 11) {
-        return (acc += 1);
-      }
-  
-      return (acc += Number.parseInt(card.code.charAt(0)));
-    }, 0);
-  }
+    return (acc += Number.parseInt(card.charAt(0)));
+  }, 0);
+}
+
+export async function createNewGame(_id, bet) {
+  const cards = getNewCards();
+  const cardsHash = "hash";
+  const restOfCards = [...cards];
+  const userCards = [];
+  const dealerCards = [];
+  userCards.push(restOfCards.shift());
+  userCards.push(restOfCards.shift());
+  dealerCards.push(restOfCards.shift());
+  const dealerScore = calculateScore(dealerCards);
+  const userScore = calculateScore(userCards);
+  const status = "user_move";
+
+  const game = new Game({
+    cards: cards,
+    cardsHash: cardsHash,
+    restOfCards: restOfCards,
+    userCards: userCards,
+    dealerCards: dealerCards,
+    userScore: userScore,
+    dealerScore: dealerScore,
+    status: status,
+    bet: bet,
+    user: _id,
+  });
+
+  await game.save();
+
+  return game;
+}
