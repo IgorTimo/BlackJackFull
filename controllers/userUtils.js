@@ -9,3 +9,11 @@ export async function getUserByEmail(email) {
     console.error(err);
   }
 }
+
+export async function getUserById(_id) {
+  try {
+    return await User.findOne({ _id: _id });
+  } catch (err) {
+    console.error(err);
+  }
+}

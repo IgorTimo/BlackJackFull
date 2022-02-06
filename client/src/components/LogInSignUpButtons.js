@@ -2,11 +2,11 @@ import LogInForm from "./LogInForm";
 import SignUpForm from "./SignUpForm";
 
 const LogInSignUpButtons = (props) => {
-  const { setMessage, setWhatForm, setToken } = props;
+  const { setMessage, setWhatForm, setAllInfoAfterAuth } = props;
 
   const handleLogInClick = () => {
     setMessage("Enter you email and password to log in");
-    setWhatForm(<LogInForm setToken = {setToken} setMessage = {setMessage}/>);
+    setWhatForm(<LogInForm setAllInfoAfterAuth = {setAllInfoAfterAuth} setMessage = {setMessage}/>);
   };
 
   const handleSignUpClick = () => {

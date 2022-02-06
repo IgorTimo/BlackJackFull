@@ -12,7 +12,8 @@ export async function startGame(userId, bet) {
   };
 
   const response = await fetch(`${SERVER_URL}start_game`, requestOptions);
-  return await response.json();
+  const data = await response.json();
+  return data;
 }
 
 

@@ -6,12 +6,14 @@ import {
 import { User } from "../model/User.js";
 import { Game } from "../model/Game.js";
 import { UserController } from "./UserController.js";
+import { getUserById } from "./userUtils.js";
 
 export class GameController {
   static async startGame(req, res) {
     const { _id, bet } = req.body;
 
-    const user = await UserController.getUserById(req, res, _id); //проверяем есть ли юзер
+    const user = await getUserById(_id); //проверяем есть ли юзер
+    console.log(user);
 
     if (user.currentGame) {
       //проверям чтобы у юзера не было незаконченных игр
@@ -38,7 +40,7 @@ export class GameController {
   }
 
   static async takeCard(req, res) {
-    const user = await UserController.getUserById(req, res, req.body._id);
+    const user = await getUserById(req.body._id);
     const game = await this.getGameById(req, res, user.currentGame);
     const response = await playerTakeCard(game);
 
@@ -50,7 +52,7 @@ export class GameController {
   }
 
   static async dealerGame(req, res) {
-    const user = await UserController.getUserById(req, res, req.body._id);
+    const user = await getUserById(req.body._id);
     const game = await this.getGameById(req, res, user.currentGame);
     const response = await dealerPlay(game);
 

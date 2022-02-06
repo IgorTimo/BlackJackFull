@@ -8,7 +8,9 @@ const StartButtton = (props) => {
   const handelStartGameClick = async () => {
     const data = await startGame(userId, betRef.current.value);
     setMessage(data.message);
-    setGame(data.game);
+    if (data.game) { // проверяем пришла ли сама игра, в теории могло прийти сообщение о том, что у юзера уже есть открытая игра
+      setGame(data.game);
+    }
   };
 
   return (

@@ -8,7 +8,7 @@ const LogInSingUp = (props) => {
   return (
     <>
       <h2>{message}</h2>
-      {!whatForm ?  <LogInSignUpButtons setToken = {props.setToken} setMessage={setMessage} setWhatForm = {setWhatForm} /> : <button onClick={() => setWhatForm(null)}>Back</button>}
+      {!whatForm ?  <LogInSignUpButtons setAllInfoAfterAuth = {props.setAllInfoAfterAuth} setMessage={setMessage} setWhatForm = {setWhatForm} /> : <button onClick={() => setWhatForm(null)}>Back</button>}
       {whatForm}
     </>
   );

@@ -13,6 +13,10 @@ routes.post("/auth", (req, res) => {
   AuthorizationController.auth(req, res);
 })
 
+routes.post("/get_user_by_id", (req, res) => {
+    UserController.getUserById(req, res);
+})
+
 routes.post("/start_game", (req, res) => {
     GameController.startGame(req, res);
 })

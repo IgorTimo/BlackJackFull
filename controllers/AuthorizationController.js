@@ -9,8 +9,12 @@ export class AuthorizationController {
       .then((user) => {
         if (user.password === req.body.password) {
           const token = jwt.sign({ email: user.email, sessionTime }, TOKEN_SECRET, { expiresIn: sessionTime });
-          console.log(token);
-          res.send({ token: token, sessionTime: sessionTime, message: "Hello and good luck, " + user.email });
+          res.send({ 
+            token: token, 
+            userId: user._id, 
+            sessionTime: sessionTime, 
+            message: `Hello and good luck, ${user.email} Press start button to begin` 
+          });
         }else{
             res.status(400).send({message: "Invalid password, try again."})
         }

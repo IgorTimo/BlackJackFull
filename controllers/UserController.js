@@ -18,9 +18,10 @@ export class UserController {
     user.save().then(() => res.send({ message: "User with email '" + email +"' added successfully." }));
   }
 
-  static async getUserById(req, res, _id) {
+  static async getUserById(req, res) {
     try {
-      return await User.findOne({ _id: _id });
+      const user = await User.findOne({ _id: req.body.userId });
+      res.send({user: user});
     } catch (err) {
       return res
         .status(400)

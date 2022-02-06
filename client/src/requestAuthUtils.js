@@ -29,3 +29,17 @@ export async function signUp(email, password) {
     return await response.json();
 
   }
+
+  export async function getUserById(userId){
+    const requestOptions = {
+      method: "POST",
+      body: JSON.stringify({
+        userId: userId
+      }),
+      headers: { "Content-Type": "application/json" }
+    }
+
+    const response = await fetch(`${SERVER_URL}get_user_by_id`, requestOptions);
+    const data = await response.json();
+    return data.user;
+  }

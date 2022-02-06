@@ -6,37 +6,37 @@ import LogInSingUp from "./components/LogInSingUp";
 import StartButtton from "./components/StartButtton";
 import TryAgainButton from "./components/TryAgainButton";
 import useToken from "./hooks/useToken";
+import { getUserById } from "./requestAuthUtils";
 
 
 
 function App() {
-  const [userId, setUserId] = useState("61fa36ab35490f7d2258f5b5");
+  //"61fa36ab35490f7d2258f5b5"
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const {token, setToken} = useToken();
+  const [user, setUser] = useState({});
+  const [sesionEndTime, setSesionEndTime] = useState(0);
   const [message, setMessage] = useState("Press start button");
   const [game, setGame] = useState({});
-  const [user, setUser] = useState({});
+
+  const setAllInfoAfterAuth = {setUserId, setToken, setSesionEndTime, setMessage};
+
+  // console.log(`Render app with user id: ${userId}, token: ${token} , sesionEndTime: ${sesionEndTime}, message: ${message}`);
+
 
   useEffect(() => {
-    
-      // const requestOptions = {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     _id: userId,
-      //   }),
-      //   headers: { "Content-Type": "application/json" },
-      // };
-  
-      // fetch("http://localhost:3003/log_in", requestOptions)
-      //   .then((response) => response.json())
-      //   .then(user => setUser(user));
-    
+    localStorage.setItem("userId", userId);
+  }, [userId]);
+
+  useEffect(() => {
+    getUserById(userId).then(user => setUser(user));
   }, [message]);
 
 
   function renderView() {
 
-    if(!token){
-      return <LogInSingUp setToken = {setToken}/>
+    if(!token && sesionEndTime === 0 ){//FIXME: вот здесь не нужно дополнительное условие sesionEndTime === 0. Дево всё в том, что токен то приходит, но мой хук его не чутвует.
+      return <LogInSingUp setAllInfoAfterAuth = {setAllInfoAfterAuth} />
     }
 
     if (!game.status) {
@@ -55,7 +55,8 @@ function App() {
   return (
     <>
       <h1>BlackJack Game</h1>
-      {token && <Header user = {user} message = {message}/>}
+      {/* {token && <Header user = {user} message = {message}/>} FIXME: здесь логичне проверять токен проверять то должны токен */}
+      {user && <Header user = {user} message = {message}/>}
       {game.status && <GameInfo game={game}/>}
       {renderView()}
     </>
