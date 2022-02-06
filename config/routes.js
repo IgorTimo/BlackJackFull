@@ -1,4 +1,5 @@
 import express from 'express';
+import { AuthorizationController } from '../controllers/AuthorizationController.js';
 import { GameController } from '../controllers/GameController.js';
 import { UserController } from '../controllers/UserController.js';
 
@@ -8,8 +9,8 @@ routes.post("/sign_up", (req, res) => {
     UserController.addUser(req, res);
 })
 
-routes.post("/log_in", (req, res) => {
-  UserController.logIn(req, res);
+routes.post("/auth", (req, res) => {
+  AuthorizationController.auth(req, res);
 })
 
 routes.post("/start_game", (req, res) => {

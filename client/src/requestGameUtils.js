@@ -1,21 +1,5 @@
 const SERVER_URL = "http://localhost:3003/";
 
-function quickPost(req, url) {
-  const requestOptions = {
-    method: "POST",
-    body: JSON.stringify(req),
-    headers: { "Content-Type": "application/json" },
-  };
-
-  // fetch(`http://localhost:3003/${url}`, requestOptions)
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     setMessage(data.message);
-  //     if (data.game) {
-  //       setGame(data.game);
-  //     }
-  //   });
-}
 
 export async function startGame(userId, bet) {
   const requestOptions = {

@@ -3,6 +3,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import { routes } from "./config/routes.js"
 
+export const TOKEN_SECRET = "extrimly secret words"
+
 await mongoose.connect("mongodb://localhost/black_jack");
 
 const app = express();

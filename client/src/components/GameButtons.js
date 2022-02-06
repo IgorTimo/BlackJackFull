@@ -1,4 +1,4 @@
-import { dealerGame, takeCard } from "../requestUtils";
+import { dealerGame, takeCard } from "../requestGameUtils";
 
 
 const GameButtons = (props) => {

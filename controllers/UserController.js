@@ -1,15 +1,21 @@
 import { User } from "../model/User.js";
+import { getUserByEmail } from "./userUtils.js";
 
 export class UserController {
-  static addUser(req, res) {
-    //FIXME: сделать нормальную логику добавления
+  static async addUser(req, res) {
+    const {email, password} = req.body;
+  
+    if(await getUserByEmail(email)){//проверяем не занят ли email
+      return res.status(400).send({message: "User with email '" + email +"' already exists"})
+    }
+
     const user = new User({
-      email: "test@test.com",
-      password: "test",
-      ballance: 1000,
+      email: email,
+      password: password,
+      ballance: 0,
       currentGame: null,
     });
-    user.save().then(() => res.send({ message: "User added successfully." }));
+    user.save().then(() => res.send({ message: "User with email '" + email +"' added successfully." }));
   }
 
   static async getUserById(req, res, _id) {
