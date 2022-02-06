@@ -2,7 +2,7 @@ import {
   createNewGameAndMessage,
   playerTakeCard,
   dealerPlay,
-} from "./utils.js";
+} from "./gameUtils.js";
 import { User } from "../model/User.js";
 import { Game } from "../model/Game.js";
 import { UserController } from "./UserController.js";

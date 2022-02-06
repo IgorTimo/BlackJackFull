@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import GameButtons from "./components/GameButtons";
+import GameInfo from "./components/GameInfo";
+import StartButtton from "./components/StartButtton";
+import TryAgainButton from "./components/TryAgainButton";
+import {startGame} from './requestUtils';
+
 
 function App() {
   const [userId, setUserId] = useState("61fa36ab35490f7d2258f5b5");
@@ -22,51 +28,18 @@ function App() {
     
   }, [message]);
 
-  function quickPost(req, url){
-    const requestOptions = {
-      method: "POST",
-      body: JSON.stringify(req),
-      headers: { "Content-Type": "application/json" },
-    };
-  
-    fetch(`http://localhost:3003/${url}`, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setMessage(data.message);
-        if (data.game) {
-          setGame(data.game);
-        }
-      });
-  }
 
   function renderSwitch() {
     if (!game.status) {
-      return <button onClick={() => quickPost({_id: userId, bet: 1}, "start_game")}>Start game</button>;
+      return <StartButtton userId = {userId} setMessage = {setMessage} setGame = {setGame}/>
     }
 
     if (game.status === "user_move") {
-      return (
-        <>
-          <button onClick={() => quickPost({_id: userId}, "take_card")}>Take card</button>
-          <button onClick={() => quickPost({_id: userId}, "dealer_game")}>Enougth</button>
-        </>
-      );
+      return <GameButtons userId = {userId} setMessage = {setMessage} setGame = {setGame}/>
     }
 
     if (game.status === "results") {
-      return (
-        <>
-          <h4>All cards we playing with: {game.cards}</h4>
-          <button
-            onClick={() => {
-              setMessage("Press start button");
-              setGame({});
-            }}
-          >
-            Try again
-          </button>
-        </>
-      );
+      return <TryAgainButton game = {game} setMessage = {setMessage} setGame = {setGame}/>
     }
   }
 
@@ -75,13 +48,7 @@ function App() {
       <h1>BlackJack Game</h1>
       <h2>Ballance: {user.ballance}   Email: {user.email}</h2>
       <h2>{message}</h2>
-      <h4>Hash of cards: {game.cardsHash}</h4>
-      <h4>Dealer cards: {game.dealerCards}</h4>
-      <h4>Dealer score: {game.dealerScore}</h4>
-      <h4>Player cards: {game.userCards}</h4>
-      <h4>Player score: {game.userScore}</h4>
-      <h4>Status of game: {game.status}</h4>
-
+      {game.status && <GameInfo game={game}/>}
       {renderSwitch()}
     </>
   );

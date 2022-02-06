@@ -90,7 +90,7 @@ export async function playerTakeCard(game) {
 }
 
 export async function dealerPlay(game) {
-  const {_id, dealerCards, restOfCards, userScore } = game;
+  const { _id, dealerCards, restOfCards, userScore } = game;
   while (calculateScore(dealerCards) < 17) {
     dealerCards.push(restOfCards.shift());
   }
@@ -135,7 +135,15 @@ function getBlackJackDrawCards() {
   return ["AS", "JC", "0D", "AH"];
 }
 
+function getManyAceCards() {
+  return ["5S", "6S", "AS", "AH", "AD", "3D", "JC", "3D", "0D", "8H"];
+}
+
 function calculateScore(cards) {
+  cards = [
+    ...cards.filter((c) => c.charAt(0) !== "A"),
+    ...cards.filter((c) => c.charAt(0) === "A"),
+  ]; //чтобы подсчёт был коррекным сортируем все тузы в конец. Чтобы всегда было понятно считать их как 1 или 11
   return cards.reduce((acc, card) => {
     if (
       card.charAt(0) === "K" ||
