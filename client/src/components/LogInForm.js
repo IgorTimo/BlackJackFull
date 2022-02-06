@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { auth } from "../requestAuthUtils";
+import { auth } from "../utils/requestAuthUtils";
 
 const LogInForm = (props) => {
     const emailRef = useRef();

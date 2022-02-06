@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { startGame } from "../requestGameUtils";
+import { startGame } from "../utils/requestGameUtils";
 
 const StartButtton = (props) => {
   const { userId, setMessage, setGame } = props;

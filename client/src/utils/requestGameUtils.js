@@ -2,11 +2,12 @@ const SERVER_URL = "http://localhost:3003/";
 
 
 export async function startGame(userId, bet) {
+
   const requestOptions = {
     method: "POST",
     body: JSON.stringify({
       _id: userId,
-      bet: bet,
+      bet: parseInt(bet)
     }),
     headers: { "Content-Type": "application/json" },
   };

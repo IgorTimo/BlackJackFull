@@ -27,7 +27,7 @@ export class GameController {
       response.game.dealerScore !== 21
     ) {
       //случай моментально победы игрока
-      await User.updateOne({ _id: _id }, { ballance: user.ballance + bet }); //начисляем ставку за быструю победу с блэк джеком
+      await User.updateOne({ _id: _id }, { ballance: (user.ballance + parseInt(bet)) }); //начисляем ставку за быструю победу с блэк джеком
     }
     if (response.game.status === "user_move") {
       await User.updateOne(

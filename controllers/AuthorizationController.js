@@ -4,7 +4,7 @@ import { TOKEN_SECRET } from "../server.js";
 
 export class AuthorizationController {
   static auth(req, res) {
-    const sessionTime = 3600;
+    const sessionTime = 60;
     User.findOne({ email: req.body.email })
       .then((user) => {
         if (user.password === req.body.password) {
