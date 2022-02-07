@@ -1,4 +1,5 @@
-const SERVER_URL = "http://localhost:3003/";
+import { PORT } from "../port";
+const SERVER_URL = `http://localhost:${PORT}/`;
 const token = JSON.parse(sessionStorage.getItem("token"));
 
 export async function auth(email, password) {
@@ -42,6 +43,5 @@ export async function signUp(email, password) {
 
     const response = await fetch(`${SERVER_URL}get_user_by_id`, requestOptions);
     const data = await response.json();
-    console.log("user on client: ", data.user)
     return data.user;
   }

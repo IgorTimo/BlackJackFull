@@ -12,9 +12,7 @@ import { startSessionEndTimer } from "./utils/utils";
 function App() {
   const { token, setToken } = useToken();
   const [user, setUser] = useState({});
-  const [sesionEndTime, setSesionEndTime] = useState(
-    localStorage.getItem("sesionEndTime") || 0
-  );
+  const [sesionEndTime, setSesionEndTime] = useState(localStorage.getItem("sesionEndTime") || 0);
   const [message, setMessage] = useState("Press start button");
   const [game, setGame] = useState({});
 
@@ -22,14 +20,16 @@ function App() {
 
   useEffect(() => {
     if (sesionEndTime) {
-      //незнаю нужны ли такие проверки, но без них много лишних перезаписей, поэтому сделал
+      //FIXME: незнаю нужны ли такие проверки, но без них много лишних перезаписей, поэтому сделал
       localStorage.setItem("sesionEndTime", sesionEndTime);
     }
-  }, [ sesionEndTime]);
+  }, [sesionEndTime]);
 
   useEffect(() => {
     // каждый раз как обновляется игра мы заново грузим юзера, так как у него меняется балланс
-    getUserInfo().then((user) => setUser(user));
+    if(token){
+      getUserInfo().then((user) => setUser(user));
+    }
   }, [message]);
 
   useEffect(() => {
@@ -42,40 +42,29 @@ function App() {
 
   function renderView() {
     if (!token && sesionEndTime === 0) {
-      //FIXME: вот здесь не нужно дополнительное условие sesionEndTime === 0. Дево всё в том, что токен то приходит, но мой хук его не чутвует.
-      return <LogInSingUp setAllInfoAfterAuth={setAllInfoAfterAuth} />;
+      //FIXME: вот здесь не нужно дополнительное условие sesionEndTime === 0. Дево всё в том, что токен то приходит, но мой хук его не чуcтвует.
+      return <LogInSingUp setAllInfoAfterAuth={setAllInfoAfterAuth} />
     }
 
     if (!game.status) {
-      return (
-        <StartButtton
-          setMessage={setMessage}
-          setGame={setGame}
-        />
-      );
+      return <StartButtton setMessage={setMessage} setGame={setGame} />
     }
 
     if (game.status === "user_move") {
-      return (
-        <GameButtons
-          setMessage={setMessage}
-          setGame={setGame}
-        />
-      );
+      return <GameButtons setMessage={setMessage} setGame={setGame} />
     }
 
     if (game.status === "results") {
-      return (
-        <TryAgainButton game={game} setMessage={setMessage} setGame={setGame} />
-      );
+      return <TryAgainButton game={game} setMessage={setMessage} setGame={setGame} />
     }
   }
 
   return (
     <>
       <h1>BlackJack Game</h1>
-      {/* {token && <Header user = {user} message = {message}/>} FIXME: здесь логичне проверять токен проверять то должны токен */}
-      {user && <Header user={user} message={message} />}
+      {/* {token && <Header user = {user} message = {message}/>} FIXME: здесь логичне проверять токен но он не работает */}
+      {/* {user && console.log("User: ",user)} FIXME: почему то и проверка юзера работать перестала, что странно. перестало работать когда юзера через токен стал подтягивать, хотя на фронте разницы никакой вообще */}
+      {user && <Header  user={user} setUser={setUser} message={message} />}
       {game.status && <GameInfo game={game} />}
       {renderView()}
     </>

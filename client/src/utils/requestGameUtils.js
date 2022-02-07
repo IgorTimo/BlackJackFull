@@ -1,4 +1,5 @@
-const SERVER_URL = "http://localhost:3003/";
+import { PORT } from "../port";
+const SERVER_URL = `http://localhost:${PORT}/`;
 const token = JSON.parse(sessionStorage.getItem("token"));
 
 export async function startGame( bet) {

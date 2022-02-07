@@ -1,10 +1,11 @@
 const Header = (props) => {
-  const { message, user } = props;
+  const { message, user, setUser } = props;
 
 
   const handleLogOutClick = () => {
     sessionStorage.clear();
     localStorage.clear();
+    setUser({}); //FIXME: толку от этого крюка не много, вроде что-то перерендеривается, но не то что надо
   }
 
   return (
