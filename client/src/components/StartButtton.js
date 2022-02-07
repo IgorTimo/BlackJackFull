@@ -2,11 +2,11 @@ import { useRef } from "react";
 import { startGame } from "../utils/requestGameUtils";
 
 const StartButtton = (props) => {
-  const { userId, setMessage, setGame } = props;
+  const { setMessage, setGame } = props;
   const betRef = useRef();
 
   const handelStartGameClick = async () => {
-    const data = await startGame(userId, betRef.current.value);
+    const data = await startGame( betRef.current.value);
     setMessage(data.message);
     if (data.game) { // проверяем пришла ли сама игра, в теории могло прийти сообщение о том, что у юзера уже есть открытая игра
       setGame(data.game);

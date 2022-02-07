@@ -6,12 +6,10 @@ import LogInSingUp from "./components/LogInSingUp";
 import StartButtton from "./components/StartButtton";
 import TryAgainButton from "./components/TryAgainButton";
 import useToken from "./hooks/useToken";
-import { getUserById } from "./utils/requestAuthUtils";
+import { getUserInfo } from "./utils/requestAuthUtils";
 import { startSessionEndTimer } from "./utils/utils";
 
 function App() {
-  //"61fa36ab35490f7d2258f5b5"
-  const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const { token, setToken } = useToken();
   const [user, setUser] = useState({});
   const [sesionEndTime, setSesionEndTime] = useState(
@@ -20,34 +18,25 @@ function App() {
   const [message, setMessage] = useState("Press start button");
   const [game, setGame] = useState({});
 
-  const setAllInfoAfterAuth = {
-    setUserId,
-    setToken,
-    setSesionEndTime,
-    setMessage,
-  };
+  const setAllInfoAfterAuth = { setToken, setSesionEndTime, setMessage }; // просто собрал 3 крюка вместе, чтобы удобнее было передавать в форму
 
   useEffect(() => {
-    //сохраняем только время окончания сессии айди юзера, по нему и будем подсасыать с сервера всю инфу. Балланс то обновляется постоянно
-    if (userId) {
-      //незнаю нужны ли эти проверки, но без них много лишних перезаписей, поэтому сделал
-      localStorage.setItem("userId", userId);
-    }
     if (sesionEndTime) {
+      //незнаю нужны ли такие проверки, но без них много лишних перезаписей, поэтому сделал
       localStorage.setItem("sesionEndTime", sesionEndTime);
     }
-  }, [userId, sesionEndTime]);
+  }, [ sesionEndTime]);
 
   useEffect(() => {
     // каждый раз как обновляется игра мы заново грузим юзера, так как у него меняется балланс
-    getUserById(userId).then((user) => setUser(user));
+    getUserInfo().then((user) => setUser(user));
   }, [message]);
 
   useEffect(() => {
     //каждую секунду проверяем, что сессия не отвалилась. Так часто прост для теста
     // поменять можно в controllers/AuthorizationController, 7 строка, const sessionTime ;
     if (sesionEndTime > 0) {
-      startSessionEndTimer(sesionEndTime, setUserId);
+      startSessionEndTimer(sesionEndTime);
     }
   }, [sesionEndTime]);
 
@@ -60,7 +49,6 @@ function App() {
     if (!game.status) {
       return (
         <StartButtton
-          userId={userId}
           setMessage={setMessage}
           setGame={setGame}
         />
@@ -70,7 +58,6 @@ function App() {
     if (game.status === "user_move") {
       return (
         <GameButtons
-          userId={userId}
           setMessage={setMessage}
           setGame={setGame}
         />

@@ -14,7 +14,7 @@ routes.post("/auth", (req, res) => {
   AuthorizationController.auth(req, res);
 })
 
-routes.post("/get_user_by_id", (req, res) => {
+routes.get("/get_user_by_id", checkAuthToken, (req, res) => {
     UserController.getUserById(req, res);
 })
 
@@ -22,10 +22,10 @@ routes.post("/start_game", checkAuthToken, (req, res) => {
     GameController.startGame(req, res);
 })
 
-routes.post("/take_card", checkAuthToken, (req, res) => {
+routes.get("/take_card", checkAuthToken, (req, res) => {
     GameController.takeCard(req, res)
 })
 
-routes.post("/dealer_game", checkAuthToken, (req, res) => {
+routes.get("/dealer_game", checkAuthToken, (req, res) => {
     GameController.dealerGame(req, res)
 })

@@ -1,4 +1,5 @@
 const SERVER_URL = "http://localhost:3003/";
+const token = JSON.parse(sessionStorage.getItem("token"));
 
 export async function auth(email, password) {
   const requestOptions = {
@@ -30,16 +31,17 @@ export async function signUp(email, password) {
 
   }
 
-  export async function getUserById(userId){
+  export async function getUserInfo(){
     const requestOptions = {
-      method: "POST",
-      body: JSON.stringify({
-        userId: userId
-      }),
-      headers: { "Content-Type": "application/json" }
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + token,
+      },
     }
 
     const response = await fetch(`${SERVER_URL}get_user_by_id`, requestOptions);
     const data = await response.json();
+    console.log("user on client: ", data.user)
     return data.user;
   }

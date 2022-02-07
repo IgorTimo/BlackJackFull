@@ -12,8 +12,7 @@ export function checkAuthToken(req, res, next) {
       return res.sendStatus(403);
     }
 
-    console.log("User id >>>> ", data.userId); // добовляем к запросу айди юзера
-    req.body._id = data.userId;
+    req.body._id = data.userId; // добовляем к запросу айди юзера
 
     next();
   });

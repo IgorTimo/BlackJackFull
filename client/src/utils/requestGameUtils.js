@@ -1,11 +1,10 @@
 const SERVER_URL = "http://localhost:3003/";
 const token = JSON.parse(sessionStorage.getItem("token"));
 
-export async function startGame(userId, bet) {
+export async function startGame( bet) {
   const requestOptions = {
     method: "POST",
     body: JSON.stringify({
-      // _id: userId,
       bet: parseInt(bet),
     }),
     headers: {
@@ -19,12 +18,9 @@ export async function startGame(userId, bet) {
   return data;
 }
 
-export async function takeCard(userId) {
+export async function takeCard() {
   const requestOptions = {
-    method: "POST",
-    // body: JSON.stringify({
-    //   _id: userId
-    // }),
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + token,
@@ -35,12 +31,9 @@ export async function takeCard(userId) {
   return await response.json();
 }
 
-export async function dealerGame(userId) {
+export async function dealerGame() {
   const requestOptions = {
-    method: "POST",
-    // body: JSON.stringify({
-    //   _id: userId
-    // }),
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + token,

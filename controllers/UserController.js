@@ -20,7 +20,7 @@ export class UserController {
 
   static async getUserById(req, res) {
     try {
-      const user = await User.findOne({ _id: req.body.userId });
+      const user = await User.findOne({ _id: req.body._id });
       res.send({user: user});
     } catch (err) {
       return res
