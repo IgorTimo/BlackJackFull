@@ -4,11 +4,11 @@ import { TOKEN_SECRET } from "../server.js";
 
 export class AuthorizationController {
   static auth(req, res) {
-    const sessionTime = 60;
+    const sessionTime = 60000;
     User.findOne({ email: req.body.email })
       .then((user) => {
         if (user.password === req.body.password) {
-          const token = jwt.sign({ email: user.email, sessionTime }, TOKEN_SECRET, { expiresIn: sessionTime });
+          const token = jwt.sign({ email: user.email, userId: user._id }, TOKEN_SECRET, { expiresIn: sessionTime });
           res.send({ 
             token: token, 
             userId: user._id, 

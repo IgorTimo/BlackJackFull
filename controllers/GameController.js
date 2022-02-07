@@ -12,8 +12,7 @@ export class GameController {
   static async startGame(req, res) {
     const { _id, bet } = req.body;
 
-    const user = await getUserById(_id); //проверяем есть ли юзер
-    console.log(user);
+    const user = await getUserById(_id); //подтягиваем юзера, которого добавили в миделвер checkAuthToken
 
     if (user.currentGame) {
       //проверям чтобы у юзера не было незаконченных игр
@@ -26,7 +25,7 @@ export class GameController {
       response.game.status === "results" &&
       response.game.dealerScore !== 21
     ) {
-      //случай моментально победы игрока
+      //случай моментальной победы игрока
       await User.updateOne({ _id: _id }, { ballance: (user.ballance + parseInt(bet)) }); //начисляем ставку за быструю победу с блэк джеком
     }
     if (response.game.status === "user_move") {
@@ -41,7 +40,7 @@ export class GameController {
 
   static async takeCard(req, res) {
     const user = await getUserById(req.body._id);
-    const game = await this.getGameById(req, res, user.currentGame);
+    const game = await await Game.findOne({_id: user.currentGame})
     const response = await playerTakeCard(game);
 
     if (response.game.status === "results") {
@@ -53,7 +52,7 @@ export class GameController {
 
   static async dealerGame(req, res) {
     const user = await getUserById(req.body._id);
-    const game = await this.getGameById(req, res, user.currentGame);
+    const game = await Game.findOne({_id: user.currentGame})
     const response = await dealerPlay(game);
 
     if (
@@ -79,13 +78,13 @@ export class GameController {
     res.send(response);
   }
 
-  static async getGameById(req, res, _id) {
-    try {
-      return await Game.findOne({ _id: _id });
-    } catch (err) {
-      return res
-        .status(400)
-        .json({ e: err, message: "User hasn't active games." });
-    }
-  }
+  // static async getGameById(req, res) {
+  //   try {
+  //     return await Game.findOne({ _id: req.body.gameId });
+  //   } catch (err) {
+  //     return res
+  //       .status(400)
+  //       .json({ e: err, message: "User hasn't active games." });
+  //   }
+  // }
 }

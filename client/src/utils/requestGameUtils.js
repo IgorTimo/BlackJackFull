@@ -1,15 +1,17 @@
 const SERVER_URL = "http://localhost:3003/";
-
+const token = JSON.parse(sessionStorage.getItem("token"));
 
 export async function startGame(userId, bet) {
-
   const requestOptions = {
     method: "POST",
     body: JSON.stringify({
-      _id: userId,
-      bet: parseInt(bet)
+      // _id: userId,
+      bet: parseInt(bet),
     }),
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
   };
 
   const response = await fetch(`${SERVER_URL}start_game`, requestOptions);
@@ -17,33 +19,34 @@ export async function startGame(userId, bet) {
   return data;
 }
 
-
 export async function takeCard(userId) {
-    const requestOptions = {
-      method: "POST",
-      body: JSON.stringify({
-        _id: userId
-      }),
-      headers: { "Content-Type": "application/json" },
-    };
-  
-    const response = await fetch(`${SERVER_URL}take_card`, requestOptions);
-    return await response.json();
-  }
+  const requestOptions = {
+    method: "POST",
+    // body: JSON.stringify({
+    //   _id: userId
+    // }),
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+  };
 
-  export async function dealerGame(userId) {
-    const requestOptions = {
-      method: "POST",
-      body: JSON.stringify({
-        _id: userId
-      }),
-      headers: { "Content-Type": "application/json" },
-    };
-  
-    const response = await fetch(`${SERVER_URL}dealer_game`, requestOptions);
-    return await response.json();
-  }
+  const response = await fetch(`${SERVER_URL}take_card`, requestOptions);
+  return await response.json();
+}
 
+export async function dealerGame(userId) {
+  const requestOptions = {
+    method: "POST",
+    // body: JSON.stringify({
+    //   _id: userId
+    // }),
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+  };
 
-
-
+  const response = await fetch(`${SERVER_URL}dealer_game`, requestOptions);
+  return await response.json();
+}

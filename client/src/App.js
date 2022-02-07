@@ -46,7 +46,7 @@ function App() {
   useEffect(() => {
     //каждую секунду проверяем, что сессия не отвалилась. Так часто прост для теста
     // поменять можно в controllers/AuthorizationController, 7 строка, const sessionTime ;
-    if (sesionEndTime) {
+    if (sesionEndTime > 0) {
       startSessionEndTimer(sesionEndTime, setUserId);
     }
   }, [sesionEndTime]);
